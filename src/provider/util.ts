@@ -6,3 +6,10 @@ export async function fetchPage(url: string, options?: RequestInit) {
     resp => resp.text(),
   )
 }
+
+export function unescapeTags(escaped: string) {
+  return escaped.replaceAll(/\n/g, ' ').replaceAll(
+    /<\/?.+?>/g,
+    '',
+  )
+}

@@ -1,4 +1,4 @@
-import { Message } from '@/bot/msg.ts'
+import { Message } from '../../bot/msg.ts'
 import {
   CardMsgHeaderTemplate,
   createCardMessage,
@@ -7,10 +7,10 @@ import {
   useMDText,
   useModuleContent,
   useText,
-} from '@/bot/msg.ts'
-import { TaskMeta } from '@/bot/task.ts'
-import { createSpecProvider, Option, Store } from './index.ts'
-import { fetchPage } from './util.ts'
+} from '../../bot/msg.ts'
+import { TaskMeta } from '../../bot/task.ts'
+import { createSpecProvider, Option, Store } from '../provider.ts'
+import { fetchPage, unescapeTags } from '../util.ts'
 
 export interface GoBlogProviderOption extends Option {
 }
@@ -50,11 +50,13 @@ async function runner(
   if (meta.debug) {
     newItems = fetchedItems.slice(0, 1)
   } else {
-    // check cached item
+    // get cached item
     const cachedItem: Item = store.get(cacheKey)
+    // update newest item
+    store.set(cacheKey, fetchedItems[0])
+
+    // set cache for the first time
     if (!cachedItem) {
-      // set cache for the first time
-      store.set(cacheKey, fetchedItems[0])
       return []
     }
 
@@ -69,9 +71,6 @@ async function runner(
     if (cachedItemIdx === -1) throw new Error('fail to compare newer article')
 
     newItems = fetchedItems.slice(0, cachedItemIdx)
-
-    // update cache to save the newest item
-    store.set(cacheKey, newItems[0])
   }
 
   // fetch summary for new items
@@ -89,14 +88,14 @@ async function runner(
         },
         elements: [
           useModuleContent({
-            text: useMDText(`**${item.title}**`),
+            text: useMDText(`**${item.title || ''}**`),
             fields: [
               useField(useMDText('')), // for margin
-              useField(useMDText(`**Authors**: ${item.author}`)),
+              useField(useMDText(`**Authors**: ${item.author || ''}`)),
               useField(useMDText('')), // for margin
-              useField(useMDText(`**Tags**: *${item.tags}*`)),
+              useField(useMDText(`**Tags**: *${item.tags || ''}*`)),
               useField(useMDText('')), // for margin
-              useField(useMDText(`**Summary**: \n${item.summary}`)),
+              useField(useMDText(`**Summary**: \n${item.summary || ''}`)),
               useField(useMDText('')), // for margin
             ],
             extra: useButton(useText('Read Article'), {
@@ -155,10 +154,7 @@ async function fetchArticleSummary(url: string) {
     html => {
       const matched = html.match(/TOC_1\.">[^<]*<\/h4>\s+<p>([\s\S]+?)<\/p>/)
       if (!matched) throw new Error('fail to parse go blog article')
-      return matched[1].replaceAll(/\n/g, ' ').replaceAll(
-        /<\/?.+?>/g,
-        '',
-      )
+      return unescapeTags(matched[1])
     },
   )
 }
