@@ -49,3 +49,6 @@ cache:
 
 fmt:
 	./scripts/fmt.sh
+
+release: compile
+	bash ./scripts/release.sh $(NAME) $(BUILD_DIR) $(RELEASE_DIR)
