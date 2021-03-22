@@ -28,6 +28,8 @@ export interface AtomSource {
   xmlParseOptions?: Partial<Options>
 
   nodeToArticle?(node: Node): AtomArticle
+
+  articleToMessage?(article: AtomArticle, meta: AtomMeta): Message
 }
 
 export interface AtomOption extends Option {
@@ -35,6 +37,7 @@ export interface AtomOption extends Option {
 
 export interface AtomMeta extends TaskMeta, AtomSource {
   nodeToArticle(node: Node): AtomArticle
+  articleToMessage(article: AtomArticle, meta: AtomMeta): Message
 }
 
 export const useAtom = createCommonProvider<AtomSource, AtomOption, AtomMeta>(
@@ -52,6 +55,7 @@ function initializer(
       interval: 60,
       debug: false,
       nodeToArticle: defaultAtomNodeToArticle,
+      articleToMessage: defaultAtomArticleToMessage,
       ...source,
       ...option,
     }
@@ -96,34 +100,11 @@ async function runner(
 
   // generate message
   return newArticles.map(node => {
-    const item = meta.nodeToArticle(node)
-    return createCardMessage(
-      {
-        header: {
-          template: meta.theme,
-          title: useText(meta.name),
-        },
-        elements: [
-          useModuleContent({
-            text: useMDText(`**${item.title}**`),
-            fields: [
-              useField(useMDText('')), // for margin
-              useField(useMDText(`**Authors**: ${item.author}`)),
-              useField(useMDText('')), // for margin
-              useField(useMDText(`**Summary**: \n${item.summary}`)),
-              useField(useMDText('')), // for margin
-            ],
-            extra: useButton(useText('Read Article'), {
-              url: item.url,
-            }),
-          }),
-        ],
-      },
-    )
+    return meta.articleToMessage(meta.nodeToArticle(node), meta)
   })
 }
 
-export function defaultAtomNodeToArticle(node: Node): AtomArticle {
+function defaultAtomNodeToArticle(node: Node): AtomArticle {
   return {
     title: node.getChild('title')?.getValue('') || '',
     url: node.getChild('link')?.getAttr('href') as string || '',
@@ -134,4 +115,33 @@ export function defaultAtomNodeToArticle(node: Node): AtomArticle {
       ).match(/<p>([\s\S]+?)<\/p>/)?.[1] || '',
     ),
   }
+}
+
+function defaultAtomArticleToMessage(
+  article: AtomArticle,
+  meta: AtomMeta,
+): Message {
+  return createCardMessage(
+    {
+      header: {
+        template: meta.theme,
+        title: useText(meta.name),
+      },
+      elements: [
+        useModuleContent({
+          text: useMDText(`**${article.title}**`),
+          fields: [
+            useField(useMDText('')), // for margin
+            useField(useMDText(`**Authors**: ${article.author}`)),
+            useField(useMDText('')), // for margin
+            useField(useMDText(`**Summary**: \n${article.summary}`)),
+            useField(useMDText('')), // for margin
+          ],
+          extra: useButton(useText('Read Article'), {
+            url: article.url,
+          }),
+        }),
+      ],
+    },
+  )
 }
