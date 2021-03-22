@@ -1,6 +1,7 @@
 import { Node, Options } from 'xml'
 import {
   CardMsgHeaderTemplate,
+  CardMsgModule,
   createCardMessage,
   Message,
   useButton,
@@ -11,7 +12,7 @@ import {
 } from '../../bot/msg.ts'
 import { TaskMeta } from '../../bot/task.ts'
 import { createCommonProvider, Option, Store } from '../provider.ts'
-import { fetchXML } from '../util.ts'
+import { fetchXML, removeTags } from '../util.ts'
 
 export interface RSSArticle {
   title: string
@@ -28,13 +29,18 @@ export interface RSSSource {
 
   xmlParseOptions?: Partial<Options>
 
-  nodeToArticle(node: Node): RSSArticle
+  nodeToArticle?(node: Node): RSSArticle
+
+  articleToMessageBody?(article: RSSArticle): CardMsgModule[]
 }
 
 export interface RSSOption extends Option {
 }
 
 export interface RSSMeta extends TaskMeta, RSSSource {
+  nodeToArticle(node: Node): RSSArticle
+
+  articleToMessageBody(article: RSSArticle): CardMsgModule[]
 }
 
 export const useRSS = createCommonProvider<RSSSource, RSSOption, RSSMeta>(
@@ -51,6 +57,11 @@ function initializer(
       theme: CardMsgHeaderTemplate.PURPLE,
       interval: 60,
       debug: false,
+      nodeToArticle: defaultRSSNodeToArticle,
+      articleToMessageBody: defaultRSSArticleToMessageBody,
+      xmlParseOptions: {
+        ignoreAttrs: true,
+      },
       ...source,
       ...option,
     }
@@ -94,34 +105,52 @@ async function runner(
   }
 
   // generate message
-  return newArticles.map(node => {
-    const item = meta.nodeToArticle(node)
-    return createCardMessage(
+  return newArticles.map(node =>
+    createCardMessage(
       {
         header: {
           template: meta.theme,
           title: useText(meta.name),
         },
-        elements: [
-          useModuleContent({
-            text: useMDText(`**${item.title}**`),
-            fields: [
-              useField(useMDText('')), // for margin
-              useField(useMDText(`**Authors**: ${item.author}`)),
-              useField(useMDText('')), // for margin
-              useField(
-                useMDText(`**Category**: *${item.category.join(', ')}*`),
-              ),
-              useField(useMDText('')), // for margin
-              useField(useMDText(`**Summary**: \n${item.summary}`)),
-              useField(useMDText('')), // for margin
-            ],
-            extra: useButton(useText('Read Article'), {
-              url: item.url,
-            }),
-          }),
-        ],
+        elements: meta.articleToMessageBody(meta.nodeToArticle(node)),
       },
     )
-  })
+  )
+}
+
+function defaultRSSNodeToArticle(node: Node): RSSArticle {
+  return {
+    title: node.getChild('title')?.getValue('') || '',
+    url: node.getChild('link')?.getValue('') || '',
+    author: node.getChild('creator')?.getValue('') || '',
+    category: node.getChildren('category').map(c => c.getValue('')),
+    summary: removeTags(
+      node.getChild('encoded')?.getValue('').match(/<p>([\s\S]*?)<\/p>/)
+        ?.[1] || '',
+    ),
+  }
+}
+
+function defaultRSSArticleToMessageBody(
+  article: RSSArticle,
+): CardMsgModule[] {
+  return [
+    useModuleContent({
+      text: useMDText(`**${article.title}**`),
+      fields: [
+        useField(useMDText('')), // for margin
+        useField(useMDText(`**Authors**: ${article.author}`)),
+        useField(useMDText('')), // for margin
+        useField(
+          useMDText(`**Category**: *${article.category.join(', ')}*`),
+        ),
+        useField(useMDText('')), // for margin
+        useField(useMDText(`**Summary**: \n${article.summary}`)),
+        useField(useMDText('')), // for margin
+      ],
+      extra: useButton(useText('Read Article'), {
+        url: article.url,
+      }),
+    }),
+  ]
 }

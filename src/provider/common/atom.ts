@@ -1,6 +1,7 @@
 import { Node, Options, unescapeEntity } from 'xml'
 import {
   CardMsgHeaderTemplate,
+  CardMsgModule,
   createCardMessage,
   Message,
   useButton,
@@ -29,7 +30,7 @@ export interface AtomSource {
 
   nodeToArticle?(node: Node): AtomArticle
 
-  articleToMessage?(article: AtomArticle, meta: AtomMeta): Message
+  articleToMessageBody?(article: AtomArticle): CardMsgModule[]
 }
 
 export interface AtomOption extends Option {
@@ -37,7 +38,8 @@ export interface AtomOption extends Option {
 
 export interface AtomMeta extends TaskMeta, AtomSource {
   nodeToArticle(node: Node): AtomArticle
-  articleToMessage(article: AtomArticle, meta: AtomMeta): Message
+
+  articleToMessageBody(article: AtomArticle): CardMsgModule[]
 }
 
 export const useAtom = createCommonProvider<AtomSource, AtomOption, AtomMeta>(
@@ -55,7 +57,7 @@ function initializer(
       interval: 60,
       debug: false,
       nodeToArticle: defaultAtomNodeToArticle,
-      articleToMessage: defaultAtomArticleToMessage,
+      articleToMessageBody: defaultAtomArticleToMessageBody,
       ...source,
       ...option,
     }
@@ -99,9 +101,17 @@ async function runner(
   }
 
   // generate message
-  return newArticles.map(node => {
-    return meta.articleToMessage(meta.nodeToArticle(node), meta)
-  })
+  return newArticles.map(node =>
+    createCardMessage(
+      {
+        header: {
+          template: meta.theme,
+          title: useText(meta.name),
+        },
+        elements: meta.articleToMessageBody(meta.nodeToArticle(node)),
+      },
+    )
+  )
 }
 
 function defaultAtomNodeToArticle(node: Node): AtomArticle {
@@ -117,31 +127,22 @@ function defaultAtomNodeToArticle(node: Node): AtomArticle {
   }
 }
 
-function defaultAtomArticleToMessage(
+function defaultAtomArticleToMessageBody(
   article: AtomArticle,
-  meta: AtomMeta,
-): Message {
-  return createCardMessage(
-    {
-      header: {
-        template: meta.theme,
-        title: useText(meta.name),
-      },
-      elements: [
-        useModuleContent({
-          text: useMDText(`**${article.title}**`),
-          fields: [
-            useField(useMDText('')), // for margin
-            useField(useMDText(`**Authors**: ${article.author}`)),
-            useField(useMDText('')), // for margin
-            useField(useMDText(`**Summary**: \n${article.summary}`)),
-            useField(useMDText('')), // for margin
-          ],
-          extra: useButton(useText('Read Article'), {
-            url: article.url,
-          }),
-        }),
+): CardMsgModule[] {
+  return [
+    useModuleContent({
+      text: useMDText(`**${article.title}**`),
+      fields: [
+        useField(useMDText('')), // for margin
+        useField(useMDText(`**Authors**: ${article.author}`)),
+        useField(useMDText('')), // for margin
+        useField(useMDText(`**Summary**: \n${article.summary}`)),
+        useField(useMDText('')), // for margin
       ],
-    },
-  )
+      extra: useButton(useText('Read Article'), {
+        url: article.url,
+      }),
+    }),
+  ]
 }
