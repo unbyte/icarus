@@ -6,5 +6,11 @@
   "https://deno.land/x/base64@v0.2.1/base64url.ts": "18bbf879b31f1f32cca8adaa2b6885ae325c2cec6a66c5817b684ca12c46ad5e",
   "https://deno.land/x/sha256@v1.0.2/deps.ts": "2e1af51a48c8507017fdb057b950366601b177fb7e73d5de54c1b3e0e115d72e",
   "https://deno.land/x/sha256@v1.0.2/mod.ts": "f109aa5eeb201a0cbfaf44950b70a429838b187e8a84c5b810c1ac84953427cc",
+  "https://deno.land/x/xmlparser@v0.2.0/mod.ts": "a6b6fd140e716c0e3dcf888a0628ce229e246a73fd833123a08cc19710c7117d",
+  "https://deno.land/x/xmlparser@v0.2.0/parser.ts": "d6801f1b64c11fbdff3dac98f10a9e4c58236a77ce654e3255b681ac4a79526d",
+  "https://deno.land/x/xmlparser@v0.2.0/regexp.ts": "34befbf3bb58cbad457d8dc58ac94b38dd513b37265630f948293d9e91f513ce",
+  "https://deno.land/x/xmlparser@v0.2.0/unescape.ts": "329b3160167cbc902b2d8a0472858a7a23e7d4aea1b79ced5eb4153969f1c001",
+  "https://deno.land/x/xmlparser@v0.2.0/utils.ts": "0cb452cb0d552b02977bcb99611dce7c37c853646872d46f27c41482d1009bc6",
+  "https://deno.land/x/xmlparser@v0.2.0/xml.ts": "576e5a57b20948cc8d9d55e6e1ff57af9e1964f597799bd169780a8e4104d358",
   "https://raw.githubusercontent.com/chiefbiiko/std-encoding/v1.0.0/mod.ts": "4a927e5cd1d9b080d72881eb285b3b94edb6dadc1828aeb194117645f4481ac0"
 }
