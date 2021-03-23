@@ -4,13 +4,20 @@
   "https://deno.land/std@0.90.0/testing/asserts.ts": "83889f9a37bdab16cb68b023a15f9172ceb644f62c0e727c72d4870a666e53d6",
   "https://deno.land/x/base64@v0.2.1/base.ts": "47dc8d68f07dc91524bdd6db36eccbe59cf4d935b5fc09f27357a3944bb3ff7b",
   "https://deno.land/x/base64@v0.2.1/base64url.ts": "18bbf879b31f1f32cca8adaa2b6885ae325c2cec6a66c5817b684ca12c46ad5e",
-  "https://deno.land/x/sha256@v1.0.2/deps.ts": "2e1af51a48c8507017fdb057b950366601b177fb7e73d5de54c1b3e0e115d72e",
-  "https://deno.land/x/sha256@v1.0.2/mod.ts": "f109aa5eeb201a0cbfaf44950b70a429838b187e8a84c5b810c1ac84953427cc",
+  "https://deno.land/x/base64@v0.2.1/mod.ts": "1cbdc4ba7229d3c6d1763fecdb9d46844777c7e153abb6dabea8b0dd01448db4",
+  "https://deno.land/x/hmac@v2.0.1/deps.ts": "c2cb0fb44389a76b253cc27a1cadfbe9f03ede2ddea0d940b5389d683940217c",
+  "https://deno.land/x/hmac@v2.0.1/mod.ts": "83590b95de468d0cf5398b7631b4fb62a64226786247fe265482045d799e8f97",
   "https://deno.land/x/xmlparser@v0.2.0/mod.ts": "a6b6fd140e716c0e3dcf888a0628ce229e246a73fd833123a08cc19710c7117d",
   "https://deno.land/x/xmlparser@v0.2.0/parser.ts": "d6801f1b64c11fbdff3dac98f10a9e4c58236a77ce654e3255b681ac4a79526d",
   "https://deno.land/x/xmlparser@v0.2.0/regexp.ts": "34befbf3bb58cbad457d8dc58ac94b38dd513b37265630f948293d9e91f513ce",
   "https://deno.land/x/xmlparser@v0.2.0/unescape.ts": "329b3160167cbc902b2d8a0472858a7a23e7d4aea1b79ced5eb4153969f1c001",
   "https://deno.land/x/xmlparser@v0.2.0/utils.ts": "0cb452cb0d552b02977bcb99611dce7c37c853646872d46f27c41482d1009bc6",
   "https://deno.land/x/xmlparser@v0.2.0/xml.ts": "576e5a57b20948cc8d9d55e6e1ff57af9e1964f597799bd169780a8e4104d358",
-  "https://raw.githubusercontent.com/chiefbiiko/std-encoding/v1.0.0/mod.ts": "4a927e5cd1d9b080d72881eb285b3b94edb6dadc1828aeb194117645f4481ac0"
+  "https://raw.githubusercontent.com/chiefbiiko/sha1/v2.0.0/deps.ts": "434b70f37ed145ca5259353c96fdee1e7d1cd8c6a32baad9dce2aedc79d0a3bc",
+  "https://raw.githubusercontent.com/chiefbiiko/sha1/v2.0.0/mod.ts": "146a101c9776cc9c807053c93f23e4b321ade5251f65745df418f4a75d5fd27b",
+  "https://raw.githubusercontent.com/chiefbiiko/sha256/v2.0.0/deps.ts": "434b70f37ed145ca5259353c96fdee1e7d1cd8c6a32baad9dce2aedc79d0a3bc",
+  "https://raw.githubusercontent.com/chiefbiiko/sha256/v2.0.0/mod.ts": "f109aa5eeb201a0cbfaf44950b70a429838b187e8a84c5b810c1ac84953427cc",
+  "https://raw.githubusercontent.com/chiefbiiko/sha512/v2.0.0/deps.ts": "434b70f37ed145ca5259353c96fdee1e7d1cd8c6a32baad9dce2aedc79d0a3bc",
+  "https://raw.githubusercontent.com/chiefbiiko/sha512/v2.0.0/mod.ts": "33190babd4c0e748bb2568fd003444487c8798c8c3a618f6593098c12805fe15",
+  "https://raw.githubusercontent.com/chiefbiiko/std-encoding/v1.1.1/mod.ts": "e61017da4cef146863d614a961b4e61f1df14b72c906092bd02161f913e76522"
 }

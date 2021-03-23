@@ -14,7 +14,7 @@ Deno.test('get signature', () => {
   const testCases = [{
     timestamp: '1584532800',
     key: '9RfDwbCf5MqJ54F8FUktw',
-    expect: '8VdKX061BvX1yMrDUz75F34hWAlsjaqZvTOVm7whKGk',
+    expect: 'YftbIE5F81bUnsLwj5Av5Ahfxsa/71+f4Th4tPR7GaA=',
   }]
 
   testCases.forEach(c =>

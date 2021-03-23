@@ -106,7 +106,9 @@ export class Bot {
       .then(resp => resp.json())
       .then(json => {
         if (json.StatusCode !== 0) {
-          throw new Error('fail to send message')
+          throw new Error(
+            `fail to send message, response: ${JSON.stringify(json)}`,
+          )
         }
       })
   }

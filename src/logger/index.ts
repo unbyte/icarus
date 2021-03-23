@@ -1,4 +1,4 @@
-import { BufferedFile } from './utils.ts'
+import { BufferedFile } from './util.ts'
 
 export type LogLevel = 'INFO' | 'ERROR'
 
