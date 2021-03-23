@@ -20,9 +20,8 @@ if (outerConfig.logfile) {
   outerConfig.logger = undefined
 }
 
-export const config = {
-  webhook: '',
-  key: '',
-  debug: false,
-  ...outerConfig,
-} as BotOptions
+if (!outerConfig.webhook || !outerConfig.key) {
+  throw new Error('missing webhook or security key')
+}
+
+export const config = outerConfig as BotOptions
