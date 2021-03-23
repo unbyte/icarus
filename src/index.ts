@@ -1,6 +1,7 @@
 import { Bot } from './bot/index.ts'
 import { config } from './config.ts'
 import {
+  useCNCFBlog,
   useECMADaily,
   useGithubBlog,
   useGoBlog,
@@ -12,7 +13,8 @@ new Bot(
     useGoBlog({ interval: 30 }),
     useGithubBlog({ interval: 30 }),
     useRustBlog({ interval: 30 }),
-    useECMADaily({ interval: 30, debug: true }),
+    useECMADaily({ interval: 30 }),
+    useCNCFBlog({ interval: 30, debug: true }),
   ],
   {
     ...config,
