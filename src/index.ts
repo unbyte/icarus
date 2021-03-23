@@ -14,10 +14,9 @@ new Bot(
     useGithubBlog({ interval: 30 }),
     useRustBlog({ interval: 30 }),
     useECMADaily({ interval: 30 }),
-    useCNCFBlog({ interval: 30, debug: true }),
+    useCNCFBlog({ interval: 60, debug: true }),
   ],
   {
     ...config,
-    debug: true,
   },
 ).start()

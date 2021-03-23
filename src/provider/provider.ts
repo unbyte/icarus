@@ -1,4 +1,3 @@
-import { alert } from '../alert/alert.ts'
 import { Message } from '../bot/msg.ts'
 import { Task } from '../bot/task.ts'
 import { TaskMeta } from '../bot/task.ts'
@@ -51,15 +50,6 @@ function metaToTask<O extends Option, M extends TaskMeta>(
   const store = new Map()
   return {
     meta,
-    run: () =>
-      runner(meta, store).catch(
-        err => {
-          alert({
-            error: err,
-            content: `error raised when running #Task[${meta.name}]`,
-          })
-          return Promise.resolve([] as Message[])
-        },
-      ),
+    run: () => runner(meta, store),
   } as Task
 }

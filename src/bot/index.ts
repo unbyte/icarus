@@ -1,4 +1,4 @@
-import { alert } from '../alert/alert.ts'
+import { Logger } from '../logger/index.ts'
 import { Message } from './msg.ts'
 import { Task } from './task.ts'
 import { getInterval, getSignature, getTimeStamp } from './util.ts'
@@ -6,6 +6,8 @@ import { getInterval, getSignature, getTimeStamp } from './util.ts'
 export interface BotOptions {
   webhook: string
   key: string
+
+  logger?: Logger
 
   debug?: boolean
 
@@ -19,11 +21,13 @@ export interface BotOptions {
 export class Bot {
   #tasks: Task[]
   #options: BotOptions
+  #logger: Logger
 
   #timers: ReturnType<typeof setInterval>[] = []
 
   constructor(tasks: (Task[] | Task)[], options: BotOptions) {
     this.#options = options
+    this.#logger = options.logger || new Logger()
     this.#tasks = tasks.flat()
   }
 
@@ -34,7 +38,7 @@ export class Bot {
 
   #debug = () => {
     this.#tasks.filter(t => t.meta.debug).forEach(t => {
-      console.log(`#Task[${t.meta.name}] is debugging`)
+      this.#logger.info(`#Task[${t.meta.name}] is debugging`)
       this.#runTask(t).then()
     })
   }
@@ -44,30 +48,37 @@ export class Bot {
     const maxInterval = this.#options.interval?.max
 
     this.#tasks.forEach((t, i) => {
-      console.log(`#Task[${t.meta.name}] is starting`)
-      // for the first time, just run without sending message
-      t.run().then()
+      this.#logger.info(`#Task[${t.meta.name}] is starting`)
+      // run directly for the first time
+      this.#runTask(t).then()
 
       this.#timers[i] = setInterval(() => {
-        console.log(`#Task[${t.meta.name}] is running on schedule`)
+        this.#logger.info(`#Task[${t.meta.name}] is running on schedule`)
         this.#runTask(t).then()
       }, getInterval(t.meta.interval, minInterval, maxInterval))
     })
   }
 
   #runTask = async (task: Task) => {
-    const msg = await task.run()
+    const msg = await task.run().catch(
+      err => {
+        this.#logger.error(
+          `Error raised when running #Task[${task.meta.name}]`,
+          err,
+        )
+        return Promise.resolve([] as Message[])
+      },
+    )
     msg.forEach(m =>
       this.#send(m)
         .catch(
           err => {
-            alert({
-              error: err,
-              content:
-                `Error raised when sending message from #Task[${task.meta.name}]\nMessage:\n${
-                  JSON.stringify(m)
-                }`,
-            })
+            this.#logger.error(
+              `Error raised when sending message by #Task[${task.meta.name}]\nMessage:\n${
+                JSON.stringify(m)
+              }`,
+              err,
+            )
             return Promise.resolve()
           },
         )
