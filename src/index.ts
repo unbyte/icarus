@@ -10,11 +10,11 @@ import {
 
 new Bot(
   [
-    useGoBlog({ interval: 30 }),
+    useGoBlog({ interval: 60 }),
     useGithubBlog({ interval: 30 }),
-    useRustBlog({ interval: 30 }),
+    useRustBlog({ interval: 60 }),
     useECMADaily({ interval: 30 }),
-    useCNCFBlog({ interval: 60, debug: true }),
+    useCNCFBlog({ interval: 90 }),
   ],
   {
     ...config,
