@@ -76,7 +76,7 @@ export class Bot {
             this.#logger.error(
               `Error raised when sending message by #Task[${task.meta.name}]\nMessage:\n${
                 JSON.stringify(m)
-              }`,
+              }\n`,
               err,
             )
             return Promise.resolve()
@@ -107,7 +107,7 @@ export class Bot {
       .then(json => {
         if (json.StatusCode !== 0) {
           throw new Error(
-            `fail to send message, response: ${JSON.stringify(json)}`,
+            `Response: \n${JSON.stringify(json)}`,
           )
         }
       })

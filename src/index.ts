@@ -6,6 +6,7 @@ import {
   useGithubBlog,
   useGoBlog,
   useRustBlog,
+  useTypescriptBlog,
 } from './provider/index.ts'
 
 new Bot(
@@ -15,6 +16,7 @@ new Bot(
     useRustBlog({ interval: 60 }),
     useECMADaily({ interval: 30 }),
     useCNCFBlog({ interval: 90 }),
+    useTypescriptBlog({ interval: 90 }),
   ],
   {
     ...config,
