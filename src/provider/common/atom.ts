@@ -94,10 +94,9 @@ async function runner(
     const lastUpdateIdx = articles.findIndex(
       item =>
         new Date(
-          (
-            item.getChild('published')?.getValue('') ??
-              item.getChild('updated')?.getValue('')
-          ) || '',
+          item.getChild('published')?.getValue('') ||
+            item.getChild('updated')?.getValue('') ||
+            '',
         ).getTime() <= lastUpdateTimestamp,
     )
 
