@@ -19,6 +19,8 @@ export interface AtomArticle {
   url: string
   author: string
   summary: string
+  updatedTime: string
+  publishedTime: string
 }
 
 export interface AtomSource {
@@ -91,8 +93,12 @@ async function runner(
 
     const lastUpdateIdx = articles.findIndex(
       item =>
-        new Date(item.getChild('published')?.getValue('') || '').getTime() <=
-          lastUpdateTimestamp,
+        new Date(
+          (
+            item.getChild('published')?.getValue('') ??
+              item.getChild('updated')?.getValue('')
+          ) || '',
+        ).getTime() <= lastUpdateTimestamp,
     )
 
     if (lastUpdateIdx === -1) throw new Error('fail to compare newer article')
@@ -124,6 +130,8 @@ function defaultAtomNodeToArticle(node: Node): AtomArticle {
         node.getChild('content')?.getValue('').substr(0, 600) || '',
       ).match(/<p>([\s\S]+?)<\/p>/)?.[1] || '',
     ),
+    publishedTime: node.getChild('published')?.getValue('') || '',
+    updatedTime: node.getChild('updated')?.getValue('') || '',
   }
 }
 

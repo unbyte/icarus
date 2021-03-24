@@ -20,6 +20,7 @@ export interface RSSArticle {
   author: string
   category: string[]
   summary: string
+  publishedTime: string
 }
 
 export interface RSSSource {
@@ -128,6 +129,7 @@ function defaultRSSNodeToArticle(node: Node): RSSArticle {
       node.getChild('encoded')?.getValue('').match(/<p>([\s\S]*?)<\/p>/)
         ?.[1] || '',
     ),
+    publishedTime: node.getChild('pubDate')?.getValue('') || '',
   }
 }
 
