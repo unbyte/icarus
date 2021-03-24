@@ -19,9 +19,7 @@ export const useCNCFBlog = (options?: RSSOption) => {
           text: useMDText(`**${article.title}**`),
           fields: [
             useField(useMDText('')), // for margin
-            useField(useMDText(`**Authors**: ${article.author}`)),
-            useField(useMDText('')), // for margin
-            useField(useMDText(`**Summary**: \n${article.summary}`)),
+            useField(useMDText(`Intro:\n${article.summary}`)),
             useField(useMDText('')), // for margin
           ],
           extra: useButton(useText('Read Article'), {
