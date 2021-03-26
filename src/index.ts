@@ -6,6 +6,7 @@ import {
   useECMADaily,
   useGithubBlog,
   useGoBlog,
+  useKernelPlanet,
   useMozillaHacks,
   usePythonBlog,
   useRustBlog,
@@ -23,6 +24,7 @@ new Bot(
     usePythonBlog({ interval: 90 }),
     useMozillaHacks({ interval: 90 }),
     useChromiumBlog({ interval: 90 }),
+    useKernelPlanet({ interval: 90 }),
   ],
   {
     ...config,
