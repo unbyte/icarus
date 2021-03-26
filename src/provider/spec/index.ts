@@ -1,3 +1,4 @@
+export { useChromiumBlog } from './chromium_blog.ts'
 export { useCNCFBlog } from './cncf_blog.ts'
 export { useECMADaily } from './ecma_daily.ts'
 export { useGithubBlog } from './github_blog.ts'

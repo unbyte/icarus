@@ -1,6 +1,7 @@
 import { Bot } from './bot/index.ts'
 import { config } from './config.ts'
 import {
+  useChromiumBlog,
   useCNCFBlog,
   useECMADaily,
   useGithubBlog,
@@ -21,6 +22,7 @@ new Bot(
     useTypescriptBlog({ interval: 90 }),
     usePythonBlog({ interval: 90 }),
     useMozillaHacks({ interval: 90 }),
+    useChromiumBlog({ interval: 90 }),
   ],
   {
     ...config,
