@@ -5,6 +5,7 @@ import {
   useECMADaily,
   useGithubBlog,
   useGoBlog,
+  useMozillaHacks,
   usePythonBlog,
   useRustBlog,
   useTypescriptBlog,
@@ -19,6 +20,7 @@ new Bot(
     useCNCFBlog({ interval: 90 }),
     useTypescriptBlog({ interval: 90 }),
     usePythonBlog({ interval: 90 }),
+    useMozillaHacks({ interval: 90 }),
   ],
   {
     ...config,
