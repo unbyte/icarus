@@ -3,6 +3,7 @@ import { config } from './config.ts'
 import {
   useChromiumBlog,
   useCNCFBlog,
+  useCooperpressPublications,
   useECMADaily,
   useGithubBlog,
   useGoBlog,
@@ -25,6 +26,7 @@ new Bot(
     useMozillaHacks({ interval: 90 }),
     useChromiumBlog({ interval: 90 }),
     useKernelPlanet({ interval: 90 }),
+    useCooperpressPublications({ interval: 90 }),
   ],
   {
     ...config,
