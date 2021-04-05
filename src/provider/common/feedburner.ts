@@ -134,7 +134,9 @@ function defaultFeedburnerNodeToArticle(node: Node): FeedburnerArticle {
 
   return {
     title: node.getChild('title')?.getValue('') || '',
-    url: node.getChild('origLink')?.getAttr('href') as string || '',
+    url:
+      node.getChildren('link')?.find(l => l.getAttr('type') === 'text/html')
+        ?.getAttr('href') as string || '',
     author: node.getChild('author')?.getChild('name')?.getValue('') || '',
     summary: removeTags(summary || ''),
     publishedTime: node.getChild('published')?.getValue('') || '',
