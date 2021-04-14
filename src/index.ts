@@ -1,6 +1,7 @@
 import { Bot } from './bot/index.ts'
 import { config } from './config.ts'
 import {
+  useChromeBlog,
   useChromiumBlog,
   useCNCFBlog,
   useCooperpressPublications,
@@ -29,6 +30,7 @@ new Bot(
     useKernelPlanet({ interval: 90 }),
     useCooperpressPublications({ interval: 90 }),
     useRustWeekly({ interval: 60 }),
+    useChromeBlog({ interval: 60 }),
   ],
   {
     ...config,

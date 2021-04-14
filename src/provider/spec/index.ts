@@ -1,3 +1,4 @@
+export { useChromeBlog } from './chrome_blog.ts'
 export { useChromiumBlog } from './chromium_blog.ts'
 export { useCNCFBlog } from './cncf_blog.ts'
 export { useCooperpressPublications } from './cooperpress_publications.ts'
