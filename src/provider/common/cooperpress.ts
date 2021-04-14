@@ -105,7 +105,7 @@ async function runner(
               useField(useMDText(outlines)),
               useField(useMDText('')), // for margin
             ],
-            extra: useButton(useText('Open Magazine'), {
+            extra: useButton(useText('Open Newsletter'), {
               url: articles[0].getChild('link')?.getValue('') || '',
             }),
           }),
@@ -119,7 +119,7 @@ function getPublishedDate(node: Node) {
   return new Date(node.getChild('pubDate')?.getValue('') || 0)
 }
 
-const idRegexp = /<p>#(\d+) — /
+const idRegexp = /<p>#\s*(\d+)\s*— /
 
 function getId(content: string) {
   return content.match(idRegexp)?.[1] || 'unknown'
