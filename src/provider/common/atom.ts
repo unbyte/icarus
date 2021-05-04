@@ -66,7 +66,7 @@ function initializer(
   })
 }
 
-const timeStoreKey = 'TIME'
+const idStoreKey = 'ID'
 
 async function runner(
   meta: AtomMeta,
@@ -77,27 +77,21 @@ async function runner(
 
   const articles = root.find(['feed', 'entry'])
 
+  if (!articles.length) throw new Error('fail to fetch articles')
+
   let newArticles: Node[]
 
   if (meta.debug) {
     newArticles = articles.slice(0, 1)
   } else {
-    // get cached update time
-    const lastUpdateTimestamp: number = store.get(timeStoreKey)
-    // get current time
-    const currentUpdateTimestamp = new Date().getTime()
-    store.set(timeStoreKey, currentUpdateTimestamp)
-
+    // get cached id
+    const lastUpdateID: string = store.get(idStoreKey)
+    store.set(idStoreKey, articles[0]?.getChild('id')?.getValue(''))
     // set cache and return empty msg for the first time
-    if (!lastUpdateTimestamp) return []
+    if (!lastUpdateID) return []
 
     const lastUpdateIdx = articles.findIndex(
-      item =>
-        new Date(
-          item.getChild('published')?.getValue('') ||
-            item.getChild('updated')?.getValue('') ||
-            '',
-        ).getTime() <= lastUpdateTimestamp,
+      item => item.getChild('id')?.getValue('') === lastUpdateID,
     )
 
     if (lastUpdateIdx === -1) throw new Error('fail to compare newer article')

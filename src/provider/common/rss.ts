@@ -30,6 +30,9 @@ export interface RSSSource {
 
   xmlParseOptions?: Partial<Options>
 
+  // guid is not a required prop in RSS 2.0 spec so can use time prop to compare instead
+  compareByTime?: boolean
+
   nodeToArticle?(node: Node): RSSArticle
 
   articleToMessageBody?(article: RSSArticle): CardMsgModule[]
@@ -63,6 +66,7 @@ function initializer(
       xmlParseOptions: {
         ignoreAttrs: true,
       },
+      compareByTime: false,
       ...source,
       ...option,
     }
@@ -70,6 +74,7 @@ function initializer(
 }
 
 const timeStoreKey = 'TIME'
+const idStoreKey = 'ID'
 
 async function runner(
   meta: RSSMeta,
@@ -80,25 +85,39 @@ async function runner(
 
   const articles = root.find(['rss', 'channel', 'item'])
 
+  if (!articles.length) throw new Error('fail to fetch articles')
+
   let newArticles: Node[]
 
   if (meta.debug) {
     newArticles = articles.slice(0, 1)
   } else {
-    // get cached update time
-    const lastUpdateTimestamp: number = store.get(timeStoreKey)
-    // get current time
-    const currentUpdateTimestamp = new Date().getTime()
-    store.set(timeStoreKey, currentUpdateTimestamp)
+    let lastUpdateIdx = -1
+    if (meta.compareByTime) {
+      // get cached update time
+      const lastUpdateTimestamp: number = store.get(timeStoreKey)
+      // get current time
+      const currentUpdateTimestamp = new Date().getTime()
+      store.set(timeStoreKey, currentUpdateTimestamp)
+      // return empty msg for the first time
+      if (!lastUpdateTimestamp) return []
 
-    // set cache and return empty msg for the first time
-    if (!lastUpdateTimestamp) return []
+      lastUpdateIdx = articles.findIndex(
+        item =>
+          new Date(item.getChild('pubDate')?.getValue('') || 0).getTime() <=
+            lastUpdateTimestamp,
+      )
+    } else {
+      // get cached id
+      const lastUpdateID: string = store.get(idStoreKey)
+      store.set(idStoreKey, articles[0]?.getChild('guid')?.getValue(''))
+      // return empty msg for the first time
+      if (!lastUpdateID) return []
 
-    const lastUpdateIdx = articles.findIndex(
-      item =>
-        new Date(item.getChild('pubDate')?.getValue('') || 0).getTime() <=
-          lastUpdateTimestamp,
-    )
+      lastUpdateIdx = articles.findIndex(
+        item => item.getChild('guid')?.getValue('') === lastUpdateID,
+      )
+    }
 
     if (lastUpdateIdx === -1) throw new Error('fail to compare newer article')
 

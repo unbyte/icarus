@@ -69,6 +69,12 @@ export class Bot {
         return Promise.resolve([] as Message[])
       },
     )
+    if (msg.length) {
+      this.#logger.info(
+        `#Task[${task.meta.name}] finds ${msg.length} new article(s)`,
+      )
+    }
+
     msg.forEach(m =>
       this.#send(m)
         .catch(
