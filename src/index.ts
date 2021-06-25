@@ -22,7 +22,7 @@ new Bot(
     useGithubBlog({ interval: 30 }),
     useRustBlog({ interval: 60 }),
     useECMADaily({ interval: 30 }),
-    // useCNCFBlog({ interval: 90 }),
+    useCNCFBlog({ interval: 90 }),
     useTypescriptBlog({ interval: 90 }),
     usePythonBlog({ interval: 90 }),
     useMozillaHacks({ interval: 90 }),

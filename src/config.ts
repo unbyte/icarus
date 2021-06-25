@@ -24,4 +24,8 @@ if (!outerConfig.webhook || !outerConfig.key) {
   throw new Error('missing webhook or security key')
 }
 
+if (outerConfig.excludes) {
+  outerConfig.excludes = outerConfig.excludes.map(e => e.trim())
+}
+
 export const config = outerConfig as BotOptions

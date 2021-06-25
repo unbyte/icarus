@@ -16,6 +16,8 @@ export interface BotOptions {
     min?: number
     max?: number
   }
+
+  excludes?: string[]
 }
 
 export class Bot {
@@ -29,6 +31,11 @@ export class Bot {
     this.#options = options
     this.#logger = options.logger || new Logger()
     this.#tasks = tasks.flat()
+    if (options.excludes?.length) {
+      this.#tasks = this.#tasks.filter(
+        t => !options.excludes!.includes(t.meta.name),
+      )
+    }
   }
 
   start() {
